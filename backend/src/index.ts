@@ -41,21 +41,21 @@ app.use(
 app.use(express.json());
 
 // Public room availability APIs
-app.get('/api/rooms', getAllRooms);
-app.get('/api/rooms/:id', getRoomById);
-app.get('/api/availability', getFreeRoomsNow);
+app.get(['/api/rooms', '/rooms'], getAllRooms);
+app.get(['/api/rooms/:id', '/rooms/:id'], getRoomById);
+app.get(['/api/availability', '/availability'], getFreeRoomsNow);
 
 // Authentication API
-app.post('/api/auth/login', login);
+app.post(['/api/auth/login', '/auth/login'], login);
 
 // CR Actions APIs (Protected)
-app.post('/api/override/cancel', authenticateJWT as any, cancelClass as any);
-app.post('/api/override/move', authenticateJWT as any, moveClass as any);
-app.get('/api/cr/schedules', authenticateJWT as any, getCRSchedules as any);
-app.delete('/api/override/:id', authenticateJWT as any, deleteOverride as any);
+app.post(['/api/override/cancel', '/override/cancel'], authenticateJWT as any, cancelClass as any);
+app.post(['/api/override/move', '/override/move'], authenticateJWT as any, moveClass as any);
+app.get(['/api/cr/schedules', '/cr/schedules'], authenticateJWT as any, getCRSchedules as any);
+app.delete(['/api/override/:id', '/override/:id'], authenticateJWT as any, deleteOverride as any);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health'], (req, res) => {
   res.json({ status: 'healthy', timestamp: new Date() });
 });
 

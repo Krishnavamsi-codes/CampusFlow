@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const prismaSchemaPath = path.join(__dirname, '../prisma/schema.prisma');
 const envPath = path.join(__dirname, '../.env');
@@ -43,5 +44,12 @@ if (target === 'sqlite') {
   console.log('Swapped DATABASE_URL to postgresql connection string.');
 }
 fs.writeFileSync(envPath, envContent, 'utf8');
+
+try {
+  console.log('Regenerating Prisma client...');
+  execSync('npx prisma generate', { stdio: 'inherit', cwd: path.join(__dirname, '..') });
+} catch (e) {
+  console.error('Failed to regenerate Prisma client:', e);
+}
 
 console.log(`Database provider toggled to ${target.toUpperCase()} successfully.`);
