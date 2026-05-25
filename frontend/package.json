@@ -12,7 +12,7 @@
   "dependencies": {
     "framer-motion": "^12.40.0",
     "lucide-react": "^1.16.0",
-    "next": "^15.3.3",
+    "next": "^16.2.6",
     "react": "19.0.0-rc-65a56d0e-20241020",
     "react-dom": "19.0.0-rc-65a56d0e-20241020"
   },
