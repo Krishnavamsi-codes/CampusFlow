@@ -18,18 +18,23 @@ app.use(
 
       const allowedOrigins = [
         "http://localhost:3000",
+        "http://127.0.0.1:3000",
         "https://campus-flow-lime.vercel.app",
       ];
 
-      const isVercelPreview = origin.includes(".vercel.app");
+      const isVercelPreview = origin.endsWith(".vercel.app") || origin.includes(".vercel.app");
 
       if (allowedOrigins.includes(origin) || isVercelPreview) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        console.warn(`[CORS Blocked] Origin: ${origin}`);
+        callback(null, false);
       }
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 200,
   })
 );
 
