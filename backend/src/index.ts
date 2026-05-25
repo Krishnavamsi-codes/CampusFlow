@@ -13,14 +13,23 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://campus-flow-lime.vercel.app",
-      "https://campus-flow-git-main-vamsi9398672280-7168s-projects.vercel.app",
-    ],
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = [
+        "http://localhost:3000",
+        "https://campus-flow-lime.vercel.app",
+      ];
+
+      const isVercelPreview = origin.includes(".vercel.app");
+
+      if (allowedOrigins.includes(origin) || isVercelPreview) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
