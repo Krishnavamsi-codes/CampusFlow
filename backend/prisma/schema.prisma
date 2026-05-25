@@ -1,0 +1,66 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Room {
+  id        String     @id // e.g. "G09", "B03", "101"
+  name      String
+  category  String     // "G_ROOMS", "B_ROOMS", "FIRST_FLOOR"
+  schedules Schedule[]
+  movedHere Override[] @relation("TargetRoom")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([category])
+}
+
+model Schedule {
+  id        String     @id @default(uuid())
+  batch     String     // e.g. "UG1", "UG2", "UG3", "UG4"
+  course    String     // e.g. "DSA", "PS", "CCN"
+  section   Int        // e.g. 1, 2
+  roomName  String
+  room      Room       @relation(fields: [roomName], references: [id], onDelete: Cascade)
+  day       String     // e.g. "Monday", "Tuesday", etc.
+  startTime String     // "HH:mm" (24h)
+  endTime   String     // "HH:mm" (24h)
+  overrides Override[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([roomName, day])
+  @@index([batch, section])
+}
+
+model CRUser {
+  id           String     @id @default(uuid())
+  username     String     @unique
+  passwordHash String
+  name         String
+  batch        String     // e.g. "UG1"
+  section      Int        // e.g. 1
+  overrides    Override[]
+  createdAt    DateTime   @default(now())
+}
+
+model Override {
+  id             String   @id @default(uuid())
+  type           String   // "CANCELLED" or "MOVED"
+  date           String   // YYYY-MM-DD representing the date of the override
+  scheduleId     String
+  schedule       Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  originalRoomId String
+  targetRoomId   String?  // Optional, only for MOVED
+  targetRoom     Room?    @relation("TargetRoom", fields: [targetRoomId], references: [id], onDelete: SetNull)
+  crUserId       String
+  crUser         CRUser   @relation(fields: [crUserId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+
+  @@unique([scheduleId, date])
+  @@index([date])
+}

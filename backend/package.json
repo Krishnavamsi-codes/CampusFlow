@@ -1,0 +1,39 @@
+{
+  "name": "iiits-live-rooms-backend",
+  "version": "1.0.0",
+  "description": "Backend API for IIITS Live Rooms availability and schedule intelligence system",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "prisma generate && tsc",
+    "start": "node dist/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "ts-node prisma/seed.ts",
+    "test": "cross-env NODE_ENV=test DATABASE_URL=\"file:./test.db\" prisma db push --accept-data-loss && cross-env NODE_ENV=test DATABASE_URL=\"file:./test.db\" ts-node prisma/seed.ts && cross-env NODE_ENV=test DATABASE_URL=\"file:./test.db\" jest --runInBand"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.10.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.11.24",
+    "@types/supertest": "^7.2.0",
+    "cross-env": "^10.1.0",
+    "jest": "^30.4.2",
+    "prisma": "^5.10.2",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.11",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3"
+  }
+}
